@@ -12,4 +12,3 @@ strong a
 	| not $ any (isLower) a = False
 	| not $ any (isNumber) a = False
 	| otherwise = True
- 
