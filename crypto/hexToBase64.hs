@@ -6,9 +6,7 @@ import System.IO
 
 
 indexB64 i = b64numerals !! i
-	where b64numerals = concat [['A'..'Z'],['a'..'z'],['0'..'9'],['+'],['/']]
-
-checkifHex = all isHexDigit
+	where b64numerals = concat [['A'..'Z'],['a'..'z'],['0'..'9'],['+'],['/']]`
 
 -- hexToBase64 hex = base_64
 
