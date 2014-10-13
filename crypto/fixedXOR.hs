@@ -7,7 +7,7 @@ import Data.List.Split
 -- 1c0111001f010100061a024b53535009181c
 -- 686974207468652062756c6c277320657965
 
-hexToDigit a = map digitToInt a
+hexToDigit = map digitToInt
 
 digitToHex digit = (concat [['0'..'9'],['a'..'f']]) !! digit
 
