@@ -23,11 +23,6 @@ combine [x,y] = shiftL x 4 + y
 combineAllDigs digits = map combine digits
 combineAllStrs string = map combine (hexToPairDigit string)
 
-unionList:: [Bool] -> Bool
-unionList [] = False
-unionList (x:[]) = x
-unionList (x:xs) = x || (unionList xs)
-
 scoreList::[Bool] -> Int
 scoreList [] = 0
 scoreList (x:xs) 
@@ -36,15 +31,12 @@ scoreList (x:xs)
 
 tryAllByteKeys string = [score (decrypt string key) | key <- [0,1..127]]
 
-comoIngles:: [Char] -> Bool
-comoIngles charArray = unionList [isInfixOf key charArray | key <- freqDict]
-
 score:: [Char] -> Int
 score charArray = scoreList [isInfixOf key charArray | key <- freqDict]
 
 
--- mostLikelyKey :: [Char] -> Char
-mostLikelyKey string = fromJust (elemIndex (maximum (tryAllByteKeys string)) (tryAllByteKeys string) ) 
+mostLikelyKey :: [Int] -> Int
+mostLikelyKey hex = fromJust (elemIndex (maximum (tryAllByteKeys hex)) (tryAllByteKeys hex) ) 
 
 findDecryption hex = decrypt (combineAllStrs hex) (mostLikelyKey (combineAllStrs hex))
 
@@ -55,7 +47,9 @@ decrypt string key = result
     result = map chr decrypted
 
 main = do
-	print $ findDecryption master_string
+	contents <- readFile "detect.txt"
+	let linesOfFiles = lines contents
+	print $ linesOfFiles
 
 
 
