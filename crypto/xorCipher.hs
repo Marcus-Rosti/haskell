@@ -2,15 +2,13 @@ import Data.Bits
 import Data.Char
 import Data.List
 import Data.List.Split
+import Data.Maybe
 import qualified Data.ByteString.Char8 as B
-
-
 
 -- TO CRACK
 master_string = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-master_key = 'G'
 
-freqDict = ["the", "and", "for", "are", "but", "not", "you", "all", "any", "can", "had", "her", "was", "one", "our", "out", "day", "get", "has", "him", "his", "how", "man", "new", "now", "old", "see", "two", "way", "who", "boy", "did", "its", "let", "put", "say", "she", "too", "use"]
+freqDict = ["th", "he", "an", "in", "er", "on", "re", "ed", "nd", "ha", "at", "en", "es", "of", "nt", "ea", "ti", "to", "io", "le", "is", "ou", "ar", "as", "de", "rt", "ve","the", "be", "to", "of", "and", "a", "in", "that", "have", "i","it", "for", "not", "on", "with", "he", "as", "you", "do", "at","this", "but", "his", "by", "from", "they", "we", "say", "her","she", "or", "an", "will", "my", "one", "all", "would", "there","their", "what", "so", "up", "out", "if", "about", "who", "get","which", "go", "me", "when", "make", "can", "like", "time", "no","just", "him", "know", "take", "people", "into", "year", "your","good", "some", "could", "them", "see", "other", "than", "then","now", "look", "only", "come", "its", "over", "think", "also","back", "after", "use", "two", "how", "our", "work", "first","well", "way", "even", "new", "want", "because", "any", "these","give", "day", "most", "us"]
 
 hexToDigit = map digitToInt
 
@@ -30,8 +28,24 @@ unionList [] = False
 unionList (x:[]) = x
 unionList (x:xs) = x || (unionList xs)
 
+scoreList::[Bool] -> Int
+scoreList [] = 0
+scoreList (x:xs) 
+	| x == True = 1 + scoreList xs
+	| x == False = scoreList xs
+
+tryAllByteKeys string = [score (decrypt string key) | key <- [0,1..127]]
+
+
 comoIngles:: [Char] -> Bool
 comoIngles charArray = unionList [isInfixOf key charArray | key <- freqDict]
+
+score:: [Char] -> Int
+score charArray = scoreList [isInfixOf key charArray | key <- freqDict]
+
+
+-- mostLikelyKey :: [Char] -> Char
+mostLikelyKey string = fromJust (elemIndex (maximum (tryAllByteKeys string)) (tryAllByteKeys string) ) 
 
 decrypt l k = result
   where
@@ -39,8 +53,7 @@ decrypt l k = result
     result = map chr decrypted
 
 main = do
-	let decrypted = decrypt (combineAllStrs master_string) (ord master_key)
-	print $ comoIngles decrypted
+	print $ decrypt (combineAllStrs master_string) (mostLikelyKey (combineAllStrs master_string))
 
 
 
