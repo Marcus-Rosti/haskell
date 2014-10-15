@@ -18,28 +18,35 @@ hexByte hex = [digitToHex (shiftR hex 4)] ++ [digitToHex (hex .&. 15)]
 xorDigit (x,y) = xor x y
 xorBytes x y = xor x y
 
-hexToPairDigit s = chunksOf 2 $ map digitToInt s 
+hexToPairDigit s = chunksOf 2 $ map digitToInt s
 combine [x,y] = shiftL x 4 + y
 combineAllDigs digits = map combine digits
 combineAllStrs string = map combine (hexToPairDigit string)
 
 scoreList::[Bool] -> Int
 scoreList [] = 0
-scoreList (x:xs) 
+scoreList (x:xs)
 	| x == True = 1 + scoreList xs
 	| x == False = scoreList xs
 
-tryAllByteKeys string = [score (decrypt string key) | key <- [0,1..127]]
+
+tryAllByteKeys:: [Int] -> [Int]
+tryAllByteKeys hex = [score (decrypt hex key) | key <- [0,1..127]]
 
 score:: [Char] -> Int
 score charArray = scoreList [isInfixOf key charArray | key <- freqDict]
 
-
 mostLikelyKey :: [Int] -> Int
-mostLikelyKey hex = fromJust (elemIndex (maximum (tryAllByteKeys hex)) (tryAllByteKeys hex) ) 
+mostLikelyKey hex = fromJust (elemIndex (maximum (tryAllByteKeys hex)) (tryAllByteKeys hex) )
 
 findDecryption hex = decrypt (combineAllStrs hex) (mostLikelyKey (combineAllStrs hex))
 
+
+mostLikelyXOR linesOfFiles = result 
+	where 
+		lineList = [(score.findDecryption) line | line <- linesOfFiles]
+		mostLikely = maximum lineList
+		result = findDecryption (linesOfFiles !! (fromJust (elemIndex mostLikely lineList)))
 
 decrypt string key = result
   where
@@ -49,11 +56,4 @@ decrypt string key = result
 main = do
 	contents <- readFile "detect.txt"
 	let linesOfFiles = lines contents
-	print $ linesOfFiles
-
-
-
-
-
-
-
+	print $ mostLikelyXOR linesOfFiles
