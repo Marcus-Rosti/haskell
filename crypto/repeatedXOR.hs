@@ -2,6 +2,7 @@ import Data.Char
 import Data.List
 import Data.List.Split
 import Data.Bits
+import Control.Parallel
 
 hexToPairDigit s = chunksOf 2 $ map digitToInt s
 combine [x,y] = shiftL x 4 + y
