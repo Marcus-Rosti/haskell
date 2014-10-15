@@ -15,7 +15,7 @@ xorDigit (x,y) = xor x y
 
 fixedXOR x y = result 
 	where
-		nibbles =map xorDigit (zip (hexToDigit x) (hexToDigit y))
+		nibbles = map xorDigit (zip (hexToDigit x) (hexToDigit y))
 		hex = map digitToHex nibbles
 		result =  hex
 
