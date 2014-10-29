@@ -1,5 +1,4 @@
-import Data.List
-
+import Control.Concurrent
 
 --recursion
 myFunc::[Int] -> Int
