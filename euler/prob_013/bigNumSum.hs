@@ -1,7 +1,13 @@
-buildArray :: String -> [Int]
-buildArray [] = []
-buildArray (x:xs) = (ord x) - 48 : buildArray xs
+-- buildArray :: String -> [Int]
+-- buildArray [] = []
+-- buildArray (x:xs) = (C.ord x) - 48 : buildArray xs
+
+--I really hate IO
+
+getNumbers file = fmap (map read . lines) (readFile file)
+
+firstTen = (take 10 . show . sum)
 
 main = do
-	let num =<< getContents "num.txt"
-	print $ num
+ 	numbs <- getNumbers "num.txt"
+	print $ firstTen numbs
