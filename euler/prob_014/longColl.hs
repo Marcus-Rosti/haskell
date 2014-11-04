@@ -14,3 +14,4 @@ main = do
 	let collNums = map collatzSize nums
 	print $ map (+1) (findIndices (== (maximum collNums) ) (collNums))
 
+

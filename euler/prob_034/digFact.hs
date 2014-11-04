@@ -2,6 +2,7 @@ import Data.List
 import Data.Bits
 import Data.Maybe
 
+--My log(n) time wasn't giving the right output
 --Haskell wiki for fast Fibs
 --Did use bitsize but that's depri
 fib :: Int -> Integer
