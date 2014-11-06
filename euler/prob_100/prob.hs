@@ -9,4 +9,4 @@ binnets i = binnetsWork (3 * 15 + 2 * 21 - 2, 4 * 15 + 3 * 21 - 3) (i-1)
 
 
 main = do
-  print $ take 10 $ dropWhile (\(f,s) -> s <10^12) $ map binnets [0..]
+  print $ take 1 $ dropWhile (\(f,s) -> s <10^12) $ map binnets [0..]
