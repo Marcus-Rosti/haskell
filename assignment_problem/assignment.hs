@@ -1,5 +1,6 @@
 import Data.List
 import Data.String.Utils
+import Data.Maybe
 
 --------------------------------------------------------------------------------------------------------
 -- Data Types! 
@@ -25,9 +26,13 @@ data Personality = 	Personality {
 					deriving (Show)
 
 --implementations of Personality
-entrepreneur = 	Personality {pay=4,	hours= -2,	impact=10,	opportunity=8}
+entrepreneur :: Personality
+entrepreneur = 	Personality {pay=4,	hours= -2,	impact=10,	opportunity=8} 
+moneygrubber :: Personality
 moneygrubber = 	Personality {pay=10,hours= -1, 	impact=4,	opportunity=2}
+academic :: 	Personality
 academic = 		Personality {pay=2,	hours= -6, 	impact=8,	opportunity=10}
+slacker :: 		Personality
 slacker = 		Personality {pay=6,	hours= -10,	impact=2,	opportunity=2}
 
 data Company = 	Company {	
@@ -43,14 +48,20 @@ data Company = 	Company {
 				deriving (Show)
 
 --implementations of Company
+bigsoftwarefirm :: 	Company
 bigsoftwarefirm = 	Company {payC=6,	hoursC=6, 	impactC=2, 	opportunityC=8}
+investmentbank :: 	Company
 investmentbank = 	Company {payC=10,	hoursC=10, 	impactC=3, 	opportunityC=4}
+gradschool :: 		Company
 gradschool = 		Company {payC=1,	hoursC=4, 	impactC=3,	opportunityC=10}
+hedgefund :: 		Company
 hedgefund = 		Company {payC=8,	hoursC=8, 	impactC=4,	opportunityC=6}
+startup ::			Company
 startup = 			Company {payC=4,	hoursC=8, 	impactC=10, opportunityC=8}
 
 
 data Offer = Offer Person String Company String
+			deriving (Show)
 
 data Relationship 	= MortalEnemies
 					| Married
@@ -61,31 +72,45 @@ data Relationship 	= MortalEnemies
 
 --------------------------------------------------------------------------------------------------------
 -- Basic Scoring
-
 scoreCompany :: Personality -> Company -> Int
-scoreCompany (Personality pay hours impact opportunity) (Company payC hoursC impactC opportunityC) 
-		= pay*payC + hours*hoursC + impact*impactC + opportunity*opportunityC
+scoreCompany (Personality ppay phours pimpact popportunity) (Company cpay chours cimpact copportunity) 
+		= ppay*cpay + phours*chours + pimpact*cimpact + popportunity*copportunity
 
-scoreOfferBase:: Person -> String -> Company -> String -> (String, Int)
-scoreOfferBase (Person name personality) b company d = ( b, (scoreCompany personality company) )
+scoreOfferBase:: Person -> String -> Company -> String -> (Person, String, Int)
+scoreOfferBase (Person name personality) b company d = ((Person name personality) , b, (scoreCompany personality company) )
 
-scoreOffer :: Offer -> (String, Int)
+scoreOffer :: Offer -> (Person, String, Int)
 scoreOffer (Offer a b c d) = scoreOfferBase a b c d
 
 --------------------------------------------------------------------------------------------------------
+-- make persons and offers
+-- TODO: Relationships
 makePersonality :: String -> Personality
 makePersonality string 
 			| string == "Academic" = academic
 			| string == "Entrepreneur" = entrepreneur
 			| string == "Money Grubber" = moneygrubber
 			| string == "Slacker" = slacker
+			| otherwise = error ("Invalid Personality Type " ++ string)
 
+makeCompany :: String -> Company
+makeCompany string 
+			| string == "Big Software Firm" = bigsoftwarefirm
+			| string == "Investment Bank" = investmentbank
+			| string == "Grad School" = gradschool
+			| string == "Hedge Fund" = hedgefund
+			| string == "Startup" = startup
+			| otherwise = error ("Invalid Company Type " ++ string)
 
 -- Turning arrays into data types
 makePerson :: [String] -> Person
 makePerson (name:personality:[]) = Person name (makePersonality personality)
 
+getPerson :: String -> [Person] -> Person
+getPerson str people = fromJust $ find (\(Person name personality) -> name == str) people
 
+makeOffer :: [String] -> [Person] -> Offer
+makeOffer (name:firm:company:place:[]) people = Offer (getPerson name people) firm (makeCompany company) place 
 
 --------------------------------------------------------------------------------------------------------
 -- I/O bullshit as always.
@@ -99,8 +124,7 @@ splitOnL str = map strip $ split "|" str
 purgeInput :: String -> [[String]]
 purgeInput str = map splitOnL $ map removeCarriageReturn $ lines str
 
-
---Eh there's probably a way to do this better it's fast and 
+-- Eh there's probably a way to do this better it's fast and 
 makePeopleArray str = drop 1 $ takeWhile (/=[]) $ dropWhile (==[]) str
 makeOfferArray str = drop 1 $ takeWhile (/=[]) $ dropWhile (==[]) $ dropWhile (/=[]) $ dropWhile (==[]) str
 makeRelArray str = drop 1 $ takeWhile (/=[]) $ dropWhile (==[]) $ dropWhile (/=[]) $ dropWhile (==[]) $ dropWhile (/=[]) $ dropWhile (==[]) str
@@ -113,7 +137,9 @@ main = do
 	let offerStrArray = makeOfferArray purgedAndSeperated
 	let relStrArray = makeRelArray purgedAndSeperated
 	let peopleArray = map makePerson peopleStrArray
-	print peopleArray
+	let offerArray = map (\x -> makeOffer x peopleArray) offerStrArray
+	print $ peopleArray
+	print $ map scoreOffer offerArray
 
 
 
