@@ -11,7 +11,7 @@ data Person = 	Person 	{
 							-- | The person has a Personality
 							personality :: Personality 
 						}
-				deriving (Show)
+				deriving (Show, Eq)
 
 data Personality = 	Personality { 	
 									-- Person's desire for a high pary
@@ -23,7 +23,7 @@ data Personality = 	Personality {
 									-- The Person's oppourtunity to learn more at the Compay
 									opportunity::Int
 								}
-					deriving (Show)
+					deriving (Show, Eq)
 
 --implementations of Personality
 entrepreneur :: Personality
@@ -45,7 +45,7 @@ data Company = 	Company {
 							-- The employee's oppourtunity to learn more
 							opportunityC::Int
 						}
-				deriving (Show)
+				deriving (Show, Eq)
 
 --implementations of Company
 bigsoftwarefirm :: 	Company
@@ -61,26 +61,14 @@ startup = 			Company {payC=4,	hoursC=8, 	impactC=10, opportunityC=8}
 
 
 data Offer = Offer Person String Company String
-			deriving (Show)
+			deriving (Show, Eq)
 
 data Relationship 	= MortalEnemies
 					| Married
 					| Friends
 					| Dating
-					deriving (Show)
+					deriving (Show, Eq)
 
-
---------------------------------------------------------------------------------------------------------
--- Basic Scoring
-scoreCompany :: Personality -> Company -> Int
-scoreCompany (Personality ppay phours pimpact popportunity) (Company cpay chours cimpact copportunity) 
-		= ppay*cpay + phours*chours + pimpact*cimpact + popportunity*copportunity
-
-scoreOfferBase:: Person -> String -> Company -> String -> (Person, String, Int)
-scoreOfferBase (Person name personality) b company d = ((Person name personality) , b, (scoreCompany personality company) )
-
-scoreOffer :: Offer -> (Person, String, Int)
-scoreOffer (Offer a b c d) = scoreOfferBase a b c d
 
 --------------------------------------------------------------------------------------------------------
 -- make persons and offers
@@ -91,7 +79,7 @@ makePersonality string
 			| string == "Entrepreneur" = entrepreneur
 			| string == "Money Grubber" = moneygrubber
 			| string == "Slacker" = slacker
-			| otherwise = error ("Invalid Personality Type " ++ string)
+			| otherwise = error ("Invalid Personality Type: " ++ string)
 
 makeCompany :: String -> Company
 makeCompany string 
@@ -100,7 +88,7 @@ makeCompany string
 			| string == "Grad School" = gradschool
 			| string == "Hedge Fund" = hedgefund
 			| string == "Startup" = startup
-			| otherwise = error ("Invalid Company Type " ++ string)
+			| otherwise = error ("Invalid Company Type: " ++ string)
 
 -- Turning arrays into data types
 makePerson :: [String] -> Person
@@ -124,23 +112,51 @@ splitOnL str = map strip $ split "|" str
 purgeInput :: String -> [[String]]
 purgeInput str = map splitOnL $ map removeCarriageReturn $ lines str
 
+dropPrevious x = dropWhile (==[]) $ dropWhile (/=[]) x
+
 -- Eh there's probably a way to do this better it's fast and 
 makePeopleArray str = drop 1 $ takeWhile (/=[]) $ dropWhile (==[]) str
-makeOfferArray str = drop 1 $ takeWhile (/=[]) $ dropWhile (==[]) $ dropWhile (/=[]) $ dropWhile (==[]) str
-makeRelArray str = drop 1 $ takeWhile (/=[]) $ dropWhile (==[]) $ dropWhile (/=[]) $ dropWhile (==[]) $ dropWhile (/=[]) $ dropWhile (==[]) str
+makeOfferArray str = drop 1 $ takeWhile (/=[]) $ dropPrevious $ dropWhile (==[]) str
+makeRelArray str = drop 1 $ takeWhile (/=[]) $ dropPrevious $ dropPrevious $ dropWhile (==[]) str
+--------------------------------------------------------------------------------------------------------
+-- Basic Scoring
+scoreCompany :: Personality -> Company -> Int
+scoreCompany (Personality ppay phours pimpact popportunity) (Company cpay chours cimpact copportunity) 
+		= ppay*cpay + phours*chours + pimpact*cimpact + popportunity*copportunity
+
+scoreOfferBase:: Person -> String -> Company -> String -> (Person, String, Int)
+scoreOfferBase (Person name personality) b company d = ((Person name personality) , b, (scoreCompany personality company) )
+
+scoreOffer :: Offer -> (Person, String, Int)
+scoreOffer (Offer a b c d) = scoreOfferBase a b c d
+
+sortOffers (a,b,c) (d,e,f) = compare f c
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 --------------------------------------------------------------------------------------------------------
 
 main = do 
-	inputFile <- readFile "inputfile2.txt"
+	inputFile <- readFile "inputfile3.txt"
 	let purgedAndSeperated = purgeInput inputFile
+
 	let peopleStrArray = makePeopleArray purgedAndSeperated
 	let offerStrArray = makeOfferArray purgedAndSeperated
 	let relStrArray = makeRelArray purgedAndSeperated
+
 	let peopleArray = map makePerson peopleStrArray
 	let offerArray = map (\x -> makeOffer x peopleArray) offerStrArray
-	print $ peopleArray
-	print $ map scoreOffer offerArray
 
+	let scoredOffers = map scoreOffer offerArray
+	print $ groupBy (\(person,_,_) (otherPerson,_,_) -> person==otherPerson) scoredOffers
+	print $ sortBy sortOffers scoredOffers
 
 
 
