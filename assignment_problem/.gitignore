@@ -19,7 +19,7 @@ cabal.config
 *.aux
 *.hp
 
-
+git
 ### Linux ###
 *~
 

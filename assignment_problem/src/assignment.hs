@@ -144,7 +144,7 @@ sortOffers (a,b,c) (d,e,f) = compare f c
 --------------------------------------------------------------------------------------------------------
 
 main = do 
-	inputFile <- readFile "inputfile3.txt"
+	inputFile <- getContents
 	let purgedAndSeperated = purgeInput inputFile
 
 	let peopleStrArray = makePeopleArray purgedAndSeperated
