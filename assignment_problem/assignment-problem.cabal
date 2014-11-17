@@ -63,7 +63,7 @@ executable assignment-problem
   
   ghc-options: 
     -threaded  
-    -O3
+    -O2
     -rtsopts  
     "-with-rtsopts=-N -sstderr"
 

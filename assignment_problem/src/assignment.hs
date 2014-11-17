@@ -132,7 +132,13 @@ scoreOffer (Offer a b c d) = scoreOfferBase a b c d
 
 sortOffers (a,b,c) (d,e,f) = compare f c
 --------------------------------------------------------------------------------------------------------
+{- 
+My inclination is to do a breadth first search to essentially assign every possible job
+I think this isn't efficient
+-}
 
+assignJob :: Person -> [(Person, String, Int)] -> (Person, String)
+assignJob personToAssign (person,comp,score) =
 
 
 
