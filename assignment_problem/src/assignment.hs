@@ -134,7 +134,7 @@ sortOffers (a,b,c) (d,e,f) = compare f c
 --------------------------------------------------------------------------------------------------------
 {- 
 My inclination is to do a breadth first search to essentially assign every possible job
-I think this isn't efficient
+I know this isn't efficient but I'm doing my best
 -}
 
 assignJob :: Person -> [(Person, String, Int)] -> (Person, String)
