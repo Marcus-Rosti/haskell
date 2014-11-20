@@ -35,6 +35,7 @@ academic = 		Personality {pay=2,	hours= -6, 	impact=8,	opportunity=10}
 slacker :: 		Personality
 slacker = 		Personality {pay=6,	hours= -10,	impact=2,	opportunity=2}
 
+
 data Company = 	Company {	
 							-- How much the employee will be paid
 							payC::Int, 
@@ -63,12 +64,12 @@ startup = 			Company {payC=4,	hoursC=8, 	impactC=10, opportunityC=8}
 data Offer = Offer Person String Company String
 			deriving (Show, Eq)
 
+
 data Relationship 	= MortalEnemies
 					| Married
 					| Friends
 					| Dating
 					deriving (Show, Eq)
-
 
 --------------------------------------------------------------------------------------------------------
 -- make persons and offers
@@ -124,21 +125,23 @@ scoreCompany :: Personality -> Company -> Int
 scoreCompany (Personality ppay phours pimpact popportunity) (Company cpay chours cimpact copportunity) 
 		= ppay*cpay + phours*chours + pimpact*cimpact + popportunity*copportunity
 
-scoreOfferBase:: Person -> String -> Company -> String -> (Person, String, Int)
-scoreOfferBase (Person name personality) b company d = ((Person name personality) , b, (scoreCompany personality company) )
+scoreOfferBase:: Person -> String -> Company -> String -> (Person, String, Int, String)
+scoreOfferBase (Person name personality) b company d = ((Person name personality) , b, (scoreCompany personality company) ,d)
 
-scoreOffer :: Offer -> (Person, String, Int)
+scoreOffer :: Offer -> (Person, String, Int, String)
 scoreOffer (Offer a b c d) = scoreOfferBase a b c d
 
-sortOffers (a,b,c) (d,e,f) = compare f c
+
 --------------------------------------------------------------------------------------------------------
 {- 
 My inclination is to do a breadth first search to essentially assign every possible job
 I know this isn't efficient but I'm doing my best
 -}
 
-assignJob :: Person -> [(Person, String, Int)] -> (Person, String)
-assignJob personToAssign (person,comp,score) =
+sortOffers (_,_,a,_) (_,_,b,_) = compare b a
+
+assignJob :: Person -> [(Person, String, Int, String)] -> (Person, String)
+assignJob personToAssign [(person,comp,score,city)] = (personToAssign,comp,score,city)
 
 
 
@@ -161,7 +164,7 @@ main = do
 	let offerArray = map (\x -> makeOffer x peopleArray) offerStrArray
 
 	let scoredOffers = map scoreOffer offerArray
-	print $ groupBy (\(person,_,_) (otherPerson,_,_) -> person==otherPerson) scoredOffers
+	print $ groupBy (\(person,_,_,_) (otherPerson,_,_,_) -> person==otherPerson) scoredOffers
 	print $ sortBy sortOffers scoredOffers
 
 
