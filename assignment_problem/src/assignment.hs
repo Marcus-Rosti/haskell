@@ -113,11 +113,15 @@ splitOnL str = map strip $ split "|" str
 purgeInput :: String -> [[String]]
 purgeInput str = map splitOnL $ map removeCarriageReturn $ lines str
 
+dropPrevious :: [[String]] -> [[String]]
 dropPrevious x = dropWhile (==[]) $ dropWhile (/=[]) x
 
 -- Eh there's probably a way to do this better it's fast and 
+makePeopleArray :: [[String]] -> [[String]]
 makePeopleArray str = drop 1 $ takeWhile (/=[]) $ dropWhile (==[]) str
+makeOfferArray :: [[String]] -> [[String]]
 makeOfferArray str = drop 1 $ takeWhile (/=[]) $ dropPrevious $ dropWhile (==[]) str
+makeRelArray :: [[String]] -> [[String]]
 makeRelArray str = drop 1 $ takeWhile (/=[]) $ dropPrevious $ dropPrevious $ dropWhile (==[]) str
 --------------------------------------------------------------------------------------------------------
 -- Basic Scoring
@@ -138,10 +142,12 @@ My inclination is to do a breadth first search to essentially assign every possi
 I know this isn't efficient but I'm doing my best
 -}
 
-sortOffers (_,_,a,_) (_,_,b,_) = compare b a
+-- compare is backwards. Or at least in this case it is
+sortOffers :: (Person, String, Int, String) -> (Person, String, Int, String) -> Ordering
+sortOffers (_,_,firstVal,_) (_,_,secondVal,_) = compare secondVal firstVal
 
-assignJob :: Person -> [(Person, String, Int, String)] -> (Person, String)
-assignJob personToAssign [(person,comp,score,city)] = (personToAssign,comp,score,city)
+-- assignJob :: Person -> [(Person, String, Int, String)] -> (Person, String)
+-- assignJob personToAssign [(person,comp,score,city)] = (personToAssign,comp,score,city)
 
 
 
@@ -151,14 +157,14 @@ assignJob personToAssign [(person,comp,score,city)] = (personToAssign,comp,score
 
 
 --------------------------------------------------------------------------------------------------------
-
+main :: IO ()
 main = do 
 	inputFile <- getContents
 	let purgedAndSeperated = purgeInput inputFile
 
 	let peopleStrArray = makePeopleArray purgedAndSeperated
 	let offerStrArray = makeOfferArray purgedAndSeperated
-	let relStrArray = makeRelArray purgedAndSeperated
+	--let relStrArray = makeRelArray purgedAndSeperated
 
 	let peopleArray = map makePerson peopleStrArray
 	let offerArray = map (\x -> makeOffer x peopleArray) offerStrArray

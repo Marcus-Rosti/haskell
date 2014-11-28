@@ -1,6 +1,11 @@
-isPentagonal :: Int -> Bool
-isPentagonal num = num == 
+-- All hexagonals are triangular
+hexagonals = [n*(2*n-1) | n<-[1..]]
+
+isPentagonal :: Integer -> Bool
+isPentagonal x = n == (fromIntegral.floor) n
+	where
+		n = ((1/2) + sqrt (1/4 + 6*fromIntegral x)) / 3
 
 main = do
-	let nums = [(x,y) | x <- [1..], y<-[1..], x*(x+1)/2 == y*(3*y-1)/2]
-	print $ nums
+	-- print $ filter (isPentagonal) $ filter (isHexagonal) triangulars
+	print $ take 3 $ filter isPentagonal hexagonals

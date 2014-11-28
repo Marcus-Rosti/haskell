@@ -62,10 +62,10 @@ executable assignment-problem
                       MissingH
   
   ghc-options: 
-    -threaded  
     -O2
+    -Wall
     -rtsopts  
-    "-with-rtsopts=-N -sstderr"
+    "-with-rtsopts=-sstderr"
 
   -- Directories containing source files.
   hs-source-dirs:      src
