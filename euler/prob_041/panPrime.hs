@@ -18,14 +18,6 @@ primeFactors n = factor n primes
         | otherwise      =     factor n ps
 --------------------------------------------------------------------------------
 
-intArr :: Int -> [Int]
-intArr = map digitToInt . show
-
-sortedDigits = sort . intArr
-
-isPanNum :: Int -> Bool
-isPanNum x = sortedDigits x == [1..length (show x)]
-
 isPrime :: Int -> Bool
 isPrime n = (length . primeFactors) n == 1
 
