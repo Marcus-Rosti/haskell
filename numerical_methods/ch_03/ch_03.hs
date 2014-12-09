@@ -42,12 +42,38 @@ resubstitute' (row:rows) = x:(resubstitute' rows')
 	    x     = (head row)/(last row)
 	    rows' = map substituteUnknown rows
 	    substituteUnknown (a1:(a2:as')) = ((a1-x*a2):as')
+	    substituteUnknown [] = []
+	    substituteUnknown [_] = []
 
+transpose :: Matrix -> Matrix
+transpose [] = []
+transpose ([]:_) = []
+transpose x = (map head x) : transpose (map tail x)
+
+symmetric :: Matrix -> Bool
+symmetric a = a == transpose a
 
 
 main :: IO()
 main = do
-	let exampleA = [[1,1,0], [0,1,1], [1,0,1]] :: Matrix
+	let exampleA = [[1,2,3], [0,1,5], [9,9,1]] :: Matrix
+	let sym = [[2,3,4],[3,2,3],[4,3,2]]
 	let exampleB = [2,3,4] :: Vector
+	print $ transpose exampleA
+	print $ symmetric sym
+	print $ triangular exampleA
+	print $ rotatePivot exampleA
+	print $ resubstitute exampleA
 	print $ mapMatrix exampleA exampleB
 	print $ gauss exampleA exampleB
+
+
+
+
+
+
+
+
+
+
+
