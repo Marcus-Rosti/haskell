@@ -1,3 +1,5 @@
+module ch_02 (bisection, newton_raphson,secant, horner ) where
+
 import Data.Maybe
 
 bisection :: (Double -> Double) -> Double -> Double -> Double -> Maybe Double
