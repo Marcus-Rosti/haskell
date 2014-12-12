@@ -1,3 +1,5 @@
+module Ch_06 (forwardDiff, centralDiff, secondDir, lagrange,trapazoid, rienmannSums, gaussQuad) where
+
 import Data.List
 
 -- differentiation 
@@ -43,29 +45,29 @@ gaussQuad f a b = (b - a) / 2 * (alpha0 * (f v0) + alpha1 * (f v1))
 -- adaptiveQuad f a b err 
 --  	|  
 
-main :: IO ()
-main = do 
-	let f x = x**2 + x + 1
-	let g x = x**x
-	let err = 10**(-7) :: Double
-	putStrLn "\nLagrange::"
-	print $ g (1.0/3.0)
-	print $ lagrange g (1.0/3.0) ([0.00,0.01..1.00]::[Double])
-	putStrLn "\nDifferentiation::"
-	print $ forwardDiff f 0 err
-	print $ centralDiff f 0 err
-	print $ secondDir f 0 err
-	print $ forwardDiff g 3 err
-	print $ centralDiff g 3 err
-	putStrLn "\nIntegration::"
-	print $ rienmannSums g pi 4 10
-	print $ rienmannSums g pi 4 100
-	print $ rienmannSums g pi 4 1000
-	print $ rienmannSums g pi 4 10000
-	putStrLn $ "\nMore Integration::"
-	print $ trapazoid g pi 4
-	print $ simpsons g pi 4
-	print $ gaussQuad g pi 4
+-- main :: IO ()
+-- main = do 
+-- 	let f x = x**2 + x + 1
+-- 	let g x = x**x
+-- 	let err = 10**(-7) :: Double
+-- 	putStrLn "\nLagrange::"
+-- 	print $ g (1.0/3.0)
+-- 	print $ lagrange g (1.0/3.0) ([0.00,0.01..1.00]::[Double])
+-- 	putStrLn "\nDifferentiation::"
+-- 	print $ forwardDiff f 0 err
+-- 	print $ centralDiff f 0 err
+-- 	print $ secondDir f 0 err
+-- 	print $ forwardDiff g 3 err
+-- 	print $ centralDiff g 3 err
+-- 	putStrLn "\nIntegration::"
+-- 	print $ rienmannSums g pi 4 10
+-- 	print $ rienmannSums g pi 4 100
+-- 	print $ rienmannSums g pi 4 1000
+-- 	print $ rienmannSums g pi 4 10000
+-- 	putStrLn $ "\nMore Integration::"
+-- 	print $ trapazoid g pi 4
+-- 	print $ simpsons g pi 4
+-- 	print $ gaussQuad g pi 4
 
 
 

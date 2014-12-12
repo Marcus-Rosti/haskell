@@ -1,3 +1,4 @@
+
 -- Polynomial Approximation
 --import Data.Matrix
 
@@ -11,6 +12,6 @@ cubicSplineInterp x (xjp2:xjp1:xj:xjm1:xjm2:[])
 	where
 		h = xjp1 - xj
 
-main = do
-	mydata = map (\x -> cubicSplineInterp x [2,1.4,1.3,1.2,0]) [0,0.01..2]
-	plot mydata
+-- main = do
+-- 	mydata = map (\x -> cubicSplineInterp x [2,1.4,1.3,1.2,0]) [0,0.01..2]
+-- 	plot mydata
