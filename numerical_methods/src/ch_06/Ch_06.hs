@@ -12,7 +12,6 @@ centralDiff f x0 h = ((f (x0+h)) - (f (x0-h))) / (2*h)
 secondDir :: (Double -> Double) -> Double -> Double -> Double
 secondDir f x0 h = ((f (x0 + h)) - 2 * (f x0) + (f (x0 - h))) / (h*h)
 
-
 -- Integration
 rienmannSums :: (Double -> Double) -> Double -> Double -> Double -> Double
 rienmannSums f a b n = dx * foldr (\l r -> (f $ a + (l * dx)) + r) 0 range

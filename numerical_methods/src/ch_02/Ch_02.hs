@@ -1,6 +1,4 @@
-module ch_02 (bisection, newton_raphson,secant, horner ) where
-
-import Data.Maybe
+module Ch_02 (bisection, newton_raphson,secant, horner ) where
 
 bisection :: (Double -> Double) -> Double -> Double -> Double -> Maybe Double
 bisection f a b err 
@@ -29,8 +27,6 @@ secant f xk_1 xk_2 err
 horner :: Double -> [Double] -> Double
 horner x = foldr (\a b -> a +b*x) 0
 
-e :: Double
-e = 2.7182818284590452353602874713527
 -- main :: IO()
 -- main = do
 -- 	let f x = e**x + x
