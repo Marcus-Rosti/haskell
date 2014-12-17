@@ -2,7 +2,6 @@ module Test_Ch_02 (ch_02Suite_Props,ch_02Suite_Units) where
 
 import Test.Tasty
 import Test.Tasty.SmallCheck as SC
-import Test.Tasty.QuickCheck as QC
 import Test.Tasty.HUnit
 
 import Ch_02 (bisection, newton_raphson, secant, horner)
@@ -94,8 +93,9 @@ newton_raphson_props = testGroup "Newton-Raphson Propeties\nChecked by SmallChec
   [ SC.testProperty "e^x + x should converge from anywhere" $
       \x -> (fromJust $ newton_raphson f fp (x :: Double) err) <= fRoot+err,
     SC.testProperty "e^x + x should converge from anywhere" $
-      \x -> (fromJust $ newton_raphson f fp (x :: Double) err) >= fRoot-err
-
+      \x -> (fromJust $ newton_raphson f fp (x :: Double) err) >= fRoot-err,
+    SC.testProperty "x^2 +1 should never converge" $
+      \x -> newton_raphson (\y -> y^2 + 1) (\y -> 2 * y) (x :: Double) err == Nothing
   ]  
 
 -- 	print $ fromJust $ bisection f (-1.0) 1.0 err

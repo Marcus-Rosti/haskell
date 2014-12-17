@@ -1,6 +1,9 @@
 module Ch_02 (bisection, newton_raphson, secant, horner) where
 
-bisection :: (Double -> Double) -> (Double, Double) -> Double -> Maybe Double
+bisection :: (Double -> Double) -- ^ function 
+			-> (Double, Double) -- ^ between what to values (a < b)
+			-> Double 			-- ^ the error
+			-> Maybe Double
 bisection f (a,b) err 
 	| (f a) * (f b) > 0 = Nothing
  	| (b-a)/2 < err = Just mid
