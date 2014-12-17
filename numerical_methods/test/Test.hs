@@ -1,28 +1,48 @@
-module Test where
- 
-import qualified Distribution.TestSuite as TS
-import qualified Test.HUnit as HU
- 
-test1 = HU.TestCase (HU.assertEqual "one equals one" 1 1)
- 
-hunitTests = HU.TestList [HU.TestLabel "Test 1" test1]
- 
-runHUnitTests :: HU.Test -> IO TS.Progress
-runHUnitTests tests = do
-   (HU.Counts cases tried errors failures) <- HU.runTestTT tests
-   return $ if errors > 0
-      then TS.Finished $ TS.Error "There were errors in the HUnit tests"
-      else if failures > 0
-         then TS.Finished $ TS.Fail "There were failures in the HUnit tests"
-         else TS.Finished TS.Pass
- 
-tests :: IO [TS.Test]
-tests = return [ TS.Test hunit ]
-  where
-    hunit = TS.TestInstance
-        { TS.run = runHUnitTests hunitTests
-        , TS.name = "HUnit Test Cases"
-        , TS.tags = ["hunit"]
-        , TS.options = []
-        , TS.setOption = \_ _ -> Right hunit
-        }
+
+import Test.Tasty
+import Test.Tasty.SmallCheck as SC
+import Test.Tasty.QuickCheck as QC
+import Test.Tasty.HUnit
+
+import Test_Ch_02 (ch_02Suite_Props,ch_02Suite_Units)
+main = defaultMain tests
+
+
+tests :: TestTree
+tests = testGroup "Tests" unitTests
+
+unitTests = ch_02Suite_Units
+
+-- properties :: TestTree
+-- properties = testGroup "Properties" [scProps, qcProps]
+
+-- scProps = testGroup "(checked by SmallCheck)"
+--   [ SC.testProperty "sort == sort . reverse" $
+--       \list -> sort (list :: [Int]) == sort (reverse list)
+--   , SC.testProperty "Fermat's little theorem" $
+--       \x -> ((x :: Integer)^7 - x) `mod` 7 == 0
+--   -- the following property does not hold
+--   , SC.testProperty "Fermat's last theorem" $
+--       \x y z n ->
+--         (n :: Integer) >= 3 SC.==> x^n + y^n /= (z^n :: Integer)
+--   ]
+
+-- qcProps = testGroup "(checked by QuickCheck)"
+--   [ QC.testProperty "sort == sort . reverse" $
+--       \list -> sort (list :: [Int]) == sort (reverse list)
+--   , QC.testProperty "Fermat's little theorem" $
+--       \x -> ((x :: Integer)^7 - x) `mod` 7 == 0
+--   -- the following property does not hold
+--   , QC.testProperty "Fermat's last theorem" $
+--       \x y z n ->
+--         (n :: Integer) >= 3 QC.==> x^n + y^n /= (z^n :: Integer)
+--   ]
+
+-- unitTests = testGroup "Unit tests"
+--   [ testCase "List comparison (different length)" $
+--       [1, 2, 3] `compare` [1,2] @?= GT
+
+--   -- the following test does not hold
+--   , testCase "List comparison (same length)" $
+--       [1, 2, 3] `compare` [1,2,2] @?= LT
+--   ]

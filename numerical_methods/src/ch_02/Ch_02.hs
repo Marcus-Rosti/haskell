@@ -1,8 +1,9 @@
-module Ch_02 (bisection, newton_raphson,secant, horner ) where
+module Ch_02 (bisection, newton_raphson, secant, horner) where
 
-bisection :: (Double -> Double) -> Double -> Double -> Double -> Maybe Double
-bisection f a b err 
-	| (b-a)/2 < err = Just mid
+bisection :: (Double -> Double) -> (Double, Double) -> Double -> Maybe Double
+bisection f (a,b) err 
+	| (f a) * (f b) > 0 = Nothing
+ 	| (b-a)/2 < err = Just mid
 	| f(mid) == 0 = Just mid
 	| (f a) * (f mid) > 0 = bisection f mid b err
 	| (f a) * (f mid) <= 0 = bisection f a mid err
