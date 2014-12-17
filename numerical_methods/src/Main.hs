@@ -11,4 +11,4 @@ main = do
 	let f x = e**x + x
 	let fp x = e**x + 1
 	let err = 10**(-15)
-	print $ fromJust $ bisection f (-1.0) 1.0 err
+	print $ fromJust $ bisection f ((-1.0), 1.0) err

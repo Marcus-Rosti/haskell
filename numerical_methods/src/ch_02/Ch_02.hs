@@ -5,15 +5,16 @@ bisection f (a,b) err
 	| (f a) * (f b) > 0 = Nothing
  	| (b-a)/2 < err = Just mid
 	| f(mid) == 0 = Just mid
-	| (f a) * (f mid) > 0 = bisection f mid b err
-	| (f a) * (f mid) <= 0 = bisection f a mid err
+	| (f a) * (f mid) > 0 = bisection f (mid, b) err
+	| (f a) * (f mid) <= 0 = bisection f (a, mid) err
 	| otherwise = Nothing 
 		where mid = (a+b)/2
 
-newton_raphson :: (Double -> Double) -> (Double -> Double) -> Double -> Double -> Double
+newton_raphson :: (Double -> Double) -> (Double -> Double) -> Double -> Double -> Maybe Double
 newton_raphson f fp x err
-	| (f x) == 0 = x
-	| (f xk) < err = xk
+	| (abs (f x)) < (abs (f xk)) = Nothing
+	| (f x) == 0 = Just x
+	| (f xk) < err = Just xk
 	| otherwise = newton_raphson f fp xk err
 		where xk = x - (f x)/(fp x)
 

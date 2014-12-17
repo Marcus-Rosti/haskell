@@ -53,24 +53,50 @@ unitTests = testGroup "Unit tests"
   ]
 
 -}
--- Bisection Tests
--- let f x = e**x + x
--- let fp x = e**x + 1
-err = 10**(0-10)
 
-ch_02Suite_Props = []
-ch_02Suite_Units = [bisectionUnits]
+e :: Double
+e = 2.7182818284590452353602874713527
+
+f x = e**x + x
+fp x = e**x + 1
+fRoot = (-0.56714329040978387299996866221035554975381578718651250813513)
+
+
+
+err = 10**(-10)
+
+ch_02Suite_Props = testGroup "Properties" [newton_raphson_props]
+ch_02Suite_Units = bisectionUnits
 
 bisectionUnits = testGroup "Bisection Unit Tests"
 	[ testCase "Bisection arctan [-4.9,5.1] > err" $
-		(fromJust $ bisection atan (-4.9) 5.1 err ) `compare` (-err) @?= GT,
-    testCase "Bisection arctan [-4.9,5.1] < err" $
-    (fromJust $ bisection atan (-4.9) 5.1 err ) `compare` (err) @?= LT,
-    testCase "Bisection arctan [1,5.1] == Nothing" $
-    bisection atan 1 5.1 err @?= Nothing
+		(fromJust $ bisection atan ((-4.9),5.1) err ) `compare` (-err) @?= GT,
 
+    testCase "Bisection arctan [-4.9,5.1] < err" $
+    (fromJust $ bisection atan ((-4.9),5.1) err ) `compare` (err) @?= LT,
+
+    testCase "Bisection arctan [1,5.1] == Nothing" $
+    bisection atan (1,5.1) err @?= Nothing,
+
+    testCase " Bisection e^x + x [-4.9,5.1] > err" $
+      (fromJust $ bisection f ((-4.9),5.1) err ) `compare` (fRoot-err) @?= GT,
+
+    testCase " Bisection e^x + x [-4.9,5.1] < err" $
+      (fromJust $ bisection f ((-4.9),5.1) err ) `compare` (fRoot+err) @?= LT,
+
+    testCase " Bisection e^x + x [0,5.1] ==nothing" $
+      bisection f (0,5.1) err @?= Nothing
 	]
 
+
+
+newton_raphson_props = testGroup "Newton-Raphson Propeties\nChecked by SmallCheck"
+  [ SC.testProperty "e^x + x should converge from anywhere" $
+      \x -> (fromJust $ newton_raphson f fp (x :: Double) err) <= fRoot+err,
+    SC.testProperty "e^x + x should converge from anywhere" $
+      \x -> (fromJust $ newton_raphson f fp (x :: Double) err) >= fRoot-err
+
+  ]  
 
 -- 	print $ fromJust $ bisection f (-1.0) 1.0 err
 -- 	print $ newton_raphson f fp 1 err
