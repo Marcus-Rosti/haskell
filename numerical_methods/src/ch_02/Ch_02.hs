@@ -13,7 +13,11 @@ bisection f (a,b) err
 	| otherwise = Nothing 
 		where mid = (a+b)/2
 
-newton_raphson :: (Double -> Double) -> (Double -> Double) -> Double -> Double -> Maybe Double
+newton_raphson :: 	(Double -> Double) 		-- ^ f(x)
+					-> (Double -> Double) 	-- ^ f'(x)
+					-> Double 				-- ^ x_0
+					-> Double 				-- ^ error tolerance
+					-> Maybe Double			-- ^ Root
 newton_raphson f fp x err
 	| (abs (f x)) < (abs (f xk)) = Nothing
 	| (f x) == 0 = Just x
@@ -21,8 +25,12 @@ newton_raphson f fp x err
 	| otherwise = newton_raphson f fp xk err
 		where xk = x - (f x)/(fp x)
 
-secant :: (Double -> Double) -> Double -> Double -> Double -> Double
---secant' = observe "Informative name for secnat" secant
+secant :: 	(Double -> Double) 	-- ^ f(x)
+			-> Double 			-- ^ xk_1
+			-> Double 			-- ^ xk_2
+			-> Double 			-- ^ error tolerance
+			-> Double			-- ^ Root
+--secant' = observe "Informative name for secant" secant
 secant f xk_1 xk_2 err 
 	| (f xk_1) == 0 = xk_1
 	| (f xk) < err = xk

@@ -1,9 +1,12 @@
-module Ch_06 (forwardDiff, centralDiff, secondDir, lagrange,trapazoid, rienmannSums, gaussQuad) where
+module Ch_06 (forwardDiff, centralDiff, secondDir, lagrange, trapazoid, rienmannSums, gaussQuad) where
 
 import Data.List
 
 -- differentiation 
-forwardDiff :: (Double -> Double) -> Double -> Double -> Double
+forwardDiff :: 	(Double -> Double)	-- ^ f(x)
+				-> Double 			-- ^ z
+				-> Double 			-- ^
+				-> Double			-- ^
 forwardDiff f x0 h = ((f (x0+h)) - (f (x0))) / h
 
 centralDiff :: (Double -> Double) -> Double -> Double -> Double
