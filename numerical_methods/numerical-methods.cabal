@@ -23,6 +23,8 @@ test-suite tests
   hs-source-dirs:   test
   main-is:          Test.hs
   other-modules:    Test_Ch_02 
+
+
   build-depends:    base >=4.6
                     , Cabal >= 1.20
                     , tasty >= 0.10

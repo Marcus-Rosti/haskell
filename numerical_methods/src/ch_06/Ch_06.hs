@@ -4,13 +4,13 @@ import Data.List
 
 -- differentiation 
 forwardDiff :: 	(Double -> Double)	-- ^ f(x)
-				-> Double 			-- ^ z
-				-> Double 			-- ^
-				-> Double			-- ^
-forwardDiff f x0 h = ((f (x0+h)) - (f (x0))) / h
+				-> Double 			-- ^ x_0
+				-> Double 			-- ^ error
+				-> Double			-- ^ f'(x_0)
+forwardDiff f x0 h = ((f (x0 + h)) - (f (x0))) / h
 
 centralDiff :: (Double -> Double) -> Double -> Double -> Double
-centralDiff f x0 h = ((f (x0+h)) - (f (x0-h))) / (2*h)
+centralDiff f x0 h = ((f (x0 + h)) - (f (x0-h))) / (2*h)
 
 secondDir :: (Double -> Double) -> Double -> Double -> Double
 secondDir f x0 h = ((f (x0 + h)) - 2 * (f x0) + (f (x0 - h))) / (h*h)

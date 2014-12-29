@@ -23,14 +23,14 @@ forwardDiff_Units = testGroup "Forward Differences Unit Tests"
 	]
 
 e :: Double
-e = 2.7182818284590452353602874713527
+e = exp 1
 
 f x = x
 
 atanP x = 1/(x*x+1)
 
-hardF x = e**(x**2)
-hardFP x = (hardF x) * 2 * x
+hardF x = e**(sin x + x)
+hardFP x = e**(sin x + x) * (cos x + 1)
 
 forwardDiff_props = testGroup "Forward Difference Tests - Checked by SmallCheck"
 	[ 
@@ -41,12 +41,12 @@ forwardDiff_props = testGroup "Forward Difference Tests - Checked by SmallCheck"
 		
 		SC.testProperty "f(x) = arctan x should give < 1/(x^2 +1) + err" $
 			\x -> forwardDiff atan (x::Double) err <= (atanP x) + err,
-		SC.testProperty "f(x) = arctan x should give > 1/(x^2 +1) -err" $
+		SC.testProperty "f(x) = arctan x should give > 1/(x^2 +1) - err" $
 			\x -> forwardDiff atan (x::Double) err >= (atanP x) - err,
 		
-		SC.testProperty "f(x) = e^ (sin^2 x +x) should give < ... + err" $
+		SC.testProperty "f(x) = e^ (sin x +x) should give < ... + err" $
 			\x -> forwardDiff hardF (x::Double) err <= (hardFP x) + err,
-		SC.testProperty "f(x) = e^ (sin^2 x +x) should give > ... -err" $
+		SC.testProperty "f(x) = e^ (sin x +x) should give > ... - err" $
 			\x -> forwardDiff hardF (x::Double) err >= (hardFP x) - err
 	]
 
@@ -59,11 +59,11 @@ centralDiff_props = testGroup "Central Difference Test - Checked by SmallCheck"
 		
 		SC.testProperty "f(x) = arctan x should give < 1/(x^2 +1) + err" $
 			\x -> centralDiff atan (x::Double) err <= (atanP x) + err**2,
-		SC.testProperty "f(x) = arctan x should give > 1/(x^2 +1) -err" $
+		SC.testProperty "f(x) = arctan x should give > 1/(x^2 +1) - err" $
 			\x -> centralDiff atan (x::Double) err >= (atanP x) - err**2,
 		
-		SC.testProperty "f(x) = e^ (sin^2 x +x) should give < ... +err" $
+		SC.testProperty "f(x) = e^ (sin x +x) should give < ... + err" $
 			\x -> centralDiff hardF (x::Double) err <= (hardFP x) + err**2,
-		SC.testProperty "f(x) = e^ (sin^2 x +x) should give > ... -err" $
+		SC.testProperty "f(x) = e^ (sin x +x) should give > ... - err" $
 			\x -> centralDiff hardF (x::Double) err >= (hardFP x) - err**2
 	]
