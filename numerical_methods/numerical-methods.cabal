@@ -4,7 +4,12 @@
 name:                numerical-methods
 version:             1.1.0.0
 synopsis:            Developing the numerical methods from Classical and Mordern Numerical Analysis 
-description:         I'm just really playing around with haskell and cabal. I wouldn't depend on this as a numerical library in haskell. Rather use this as a guide to introducing ideas about haskell and getting a clear idea of how to do things.
+description:         
+  I'm just really playing around with haskell and cabal.
+  I wouldn't depend on this as a numerical library in h-
+  askell. Rather use this as a guide to introducing ide-
+  as about haskell and getting a clear idea of how to d-
+  o things.
 license:             GPL-2
 license-file:        LICENSE
 author:              Marcus Rosti
