@@ -10,7 +10,7 @@ forwardDiff :: 	(Double -> Double)	-- ^ f(x)
 forwardDiff f x0 h = ((f (x0 + h)) - (f (x0))) / h
 
 centralDiff :: (Double -> Double) -> Double -> Double -> Double
-centralDiff f x0 h = ((f (x0 + h)) - (f (x0-h))) / (2*h)
+centralDiff f x0 h = ((f (x0 + h)) - (f (x0 - h))) / (2*h)
 
 secondDir :: (Double -> Double) -> Double -> Double -> Double
 secondDir f x0 h = ((f (x0 + h)) - 2 * (f x0) + (f (x0 - h))) / (h*h)
@@ -34,6 +34,7 @@ trapazoid f a b = (b - a) / 2 * ( (f a) + (f b))
 simpsons :: (Double -> Double) -> Double -> Double -> Double
 simpsons f a b = (b - a) / 2 * ((f a) + 4 * (f ((a+b) / 2 )) + (f b))
 
+-- 2 point Guassian Quad
 gaussQuad :: (Double -> Double) -> Double -> Double -> Double
 gaussQuad f a b = (b - a) / 2 * (alpha0 * (f v0) + alpha1 * (f v1))
 	where 

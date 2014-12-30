@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                numerical-methods
-version:             1.1.0.0
+version:             0.1.0.0
 synopsis:            Developing the numerical methods from Classical and Mordern Numerical Analysis 
 description:         
   I'm just really playing around with haskell and cabal.
@@ -53,6 +53,7 @@ executable numerical-methods
                     , Cabal >= 1.20
   hs-source-dirs:   src src/ch_02 src/ch_03 src/ch_06
   ghc-options: 
+    -O
     -Wall
     -rtsopts  
     "-with-rtsopts=-sstderr"

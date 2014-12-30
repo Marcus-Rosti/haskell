@@ -29,9 +29,6 @@ f x = x
 
 atanP x = 1/(x*x+1)
 
-hardF x = e**(sin x + x)
-hardFP x = e**(sin x + x) * (cos x + 1)
-
 forwardDiff_props = testGroup "Forward Difference Tests - Checked by SmallCheck"
 	[ 
 		SC.testProperty "f(x) = x should give 1 everywhere" $
@@ -45,9 +42,9 @@ forwardDiff_props = testGroup "Forward Difference Tests - Checked by SmallCheck"
 			\x -> forwardDiff atan (x::Double) err >= (atanP x) - err,
 		
 		SC.testProperty "f(x) = e^ (sin x +x) should give < ... + err" $
-			\x -> forwardDiff hardF (x::Double) err <= (hardFP x) + err,
+			\x -> forwardDiff sin (x::Double) err <= (cos x) + err,
 		SC.testProperty "f(x) = e^ (sin x +x) should give > ... - err" $
-			\x -> forwardDiff hardF (x::Double) err >= (hardFP x) - err
+			\x -> forwardDiff sin (x::Double) err >= (cos x) - err
 	]
 
 centralDiff_props = testGroup "Central Difference Test - Checked by SmallCheck"
@@ -63,7 +60,7 @@ centralDiff_props = testGroup "Central Difference Test - Checked by SmallCheck"
 			\x -> centralDiff atan (x::Double) err >= (atanP x) - err**2,
 		
 		SC.testProperty "f(x) = e^ (sin x +x) should give < ... + err" $
-			\x -> centralDiff hardF (x::Double) err <= (hardFP x) + err**2,
+			\x -> centralDiff sin (x::Double) err <= (cos x) + err**2,
 		SC.testProperty "f(x) = e^ (sin x +x) should give > ... - err" $
-			\x -> centralDiff hardF (x::Double) err >= (hardFP x) - err**2
+			\x -> centralDiff sin (x::Double) err >= (cos x) - err**2
 	]
