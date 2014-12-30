@@ -1,4 +1,4 @@
-module Ch_06 (forwardDiff, centralDiff, secondDir, lagrange, trapazoid, rienmannSums, gaussQuad) where
+module Ch_06 (forwardDiff, centralDiff, secondDir, lagrange, trapazoid, rienmannSums, gaussQuad, adaptiveQuad) where
 
 import Data.List
 
@@ -34,7 +34,7 @@ trapazoid f a b = (b - a) / 2 * ( (f a) + (f b))
 simpsons :: (Double -> Double) -> Double -> Double -> Double
 simpsons f a b = (b - a) / 2 * ((f a) + 4 * (f ((a+b) / 2 )) + (f b))
 
--- 2 point Guassian Quad
+-- 2 point Gaussian Quad
 gaussQuad :: (Double -> Double) -> Double -> Double -> Double
 gaussQuad f a b = (b - a) / 2 * (alpha0 * (f v0) + alpha1 * (f v1))
 	where 
@@ -45,8 +45,13 @@ gaussQuad f a b = (b - a) / 2 * (alpha0 * (f v0) + alpha1 * (f v1))
 		v0 = ((z0*(b-a)+a+b))/2
 		v1 = ((z1*(b-a)+a+b))/2
 
--- adaptiveQuad f a b err 
---  	|  
+adaptiveQuad :: (Double -> Double) -> Double -> Double -> Double -> Double
+adaptiveQuad f a b err 
+	| abs (mainQuad - testQuad) < (err/10) = mainQuad
+	| otherwise = (adaptiveQuad f a ((a+b)/2) err) + (adaptiveQuad f ((a+b)/2) b err)
+ 		where
+ 			mainQuad = gaussQuad f a b
+ 			testQuad = gaussQuad f a ((a+b)/2) + gaussQuad f ((a+b)/2) b
 
 -- main :: IO ()
 -- main = do 

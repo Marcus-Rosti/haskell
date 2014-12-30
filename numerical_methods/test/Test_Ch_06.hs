@@ -64,3 +64,4 @@ centralDiff_props = testGroup "Central Difference Test - Checked by SmallCheck"
 		SC.testProperty "f(x) = e^ (sin x +x) should give > ... - err" $
 			\x -> centralDiff sin (x::Double) err >= (cos x) - err**2
 	]
+
