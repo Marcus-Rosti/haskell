@@ -29,6 +29,8 @@ f x = x
 
 atanP x = 1/(x*x+1)
 
+
+
 forwardDiff_props = testGroup "Forward Difference Tests - Checked by SmallCheck"
 	[ 
 		SC.testProperty "f(x) = x should give 1 everywhere" $
@@ -47,7 +49,7 @@ forwardDiff_props = testGroup "Forward Difference Tests - Checked by SmallCheck"
 			\x -> forwardDiff sin (x::Double) err >= (cos x) - err
 	]
 
-centralDiff_props = testGroup "Central Difference Test - Checked by SmallCheck"
+centralDiff_props = testGroup "Central Difference Tests - Checked by SmallCheck"
 	[
 		SC.testProperty "f(x) = x should give 1 everywhere" $
 			\x -> centralDiff (\y -> y) (x::Double) err <= 1 + err**2,
@@ -64,4 +66,3 @@ centralDiff_props = testGroup "Central Difference Test - Checked by SmallCheck"
 		SC.testProperty "f(x) = e^ (sin x +x) should give > ... - err" $
 			\x -> centralDiff sin (x::Double) err >= (cos x) - err**2
 	]
-

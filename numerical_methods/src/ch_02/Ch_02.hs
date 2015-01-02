@@ -39,13 +39,3 @@ secant f xk_1 xk_2 err
 
 horner :: Double -> [Double] -> Double
 horner x = foldr (\a b -> a +b*x) 0
-
--- main :: IO()
--- main = do
--- 	let f x = e**x + x
--- 	let fp x = e**x + 1
--- 	let err = 10**(-15)
--- 	print $ fromJust $ bisection f (-1.0) 1.0 err
--- 	print $ newton_raphson f fp 1 err
--- 	print $ secant f 1 0 err
--- 	print $ fromJust $ bisection atan (-4.9) 5.1 err

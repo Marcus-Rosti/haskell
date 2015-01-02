@@ -51,9 +51,11 @@ executable numerical-methods
   other-modules:    Ch_02, Ch_03, Ch_06   
   build-depends:    base >=4.6 && <4.8
                     , Cabal >= 1.20
+                    , parallel 
   hs-source-dirs:   src src/ch_02 src/ch_03 src/ch_06
   ghc-options: 
     -O
     -Wall
+    -threaded
     -rtsopts  
-    "-with-rtsopts=-sstderr"
+    "-with-rtsopts=-sstderr -N"

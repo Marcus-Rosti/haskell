@@ -1,5 +1,6 @@
 module Ch_06 (forwardDiff, centralDiff, secondDir, lagrange, trapazoid, rienmannSums, gaussQuad, adaptiveQuad) where
 
+import Control.Parallel
 import Data.List
 
 -- differentiation 
@@ -48,34 +49,24 @@ gaussQuad f a b = (b - a) / 2 * (alpha0 * (f v0) + alpha1 * (f v1))
 adaptiveQuad :: (Double -> Double) -> Double -> Double -> Double -> Double
 adaptiveQuad f a b err 
 	| abs (mainQuad - testQuad) < (err/10) = mainQuad
-	| otherwise = (adaptiveQuad f a ((a+b)/2) err) + (adaptiveQuad f ((a+b)/2) b err)
+	| otherwise = par n1 (pseq n2 (n1 + n2))
  		where
+ 			mid = (a+b)/2
  			mainQuad = gaussQuad f a b
- 			testQuad = gaussQuad f a ((a+b)/2) + gaussQuad f ((a+b)/2) b
+ 			testQuad = gaussQuad f a mid + gaussQuad f mid b
+ 			n1 = adaptiveQuad f a mid err
+ 			n2 = adaptiveQuad f mid b err
 
--- main :: IO ()
--- main = do 
--- 	let f x = x**2 + x + 1
--- 	let g x = x**x
--- 	let err = 10**(-7) :: Double
--- 	putStrLn "\nLagrange::"
--- 	print $ g (1.0/3.0)
--- 	print $ lagrange g (1.0/3.0) ([0.00,0.01..1.00]::[Double])
--- 	putStrLn "\nDifferentiation::"
--- 	print $ forwardDiff f 0 err
--- 	print $ centralDiff f 0 err
--- 	print $ secondDir f 0 err
--- 	print $ forwardDiff g 3 err
--- 	print $ centralDiff g 3 err
--- 	putStrLn "\nIntegration::"
--- 	print $ rienmannSums g pi 4 10
--- 	print $ rienmannSums g pi 4 100
--- 	print $ rienmannSums g pi 4 1000
--- 	print $ rienmannSums g pi 4 10000
--- 	putStrLn $ "\nMore Integration::"
--- 	print $ trapazoid g pi 4
--- 	print $ simpsons g pi 4
--- 	print $ gaussQuad g pi 4
+-- adaptiveQuad :: (Double -> Double) -> Double -> Double -> Double -> Double
+-- adaptiveQuad f a b err 
+-- 	| abs (mainQuad - testQuad) < (err/10) = mainQuad
+-- 	| otherwise = n1 + n2
+--  		where
+--  			mid = (a+b)/2
+--  			mainQuad = gaussQuad f a b
+--  			testQuad = gaussQuad f a mid + gaussQuad f mid b
+--  			n1 = adaptiveQuad f a mid err
+--  			n2 = adaptiveQuad f mid b err
 
 
 
