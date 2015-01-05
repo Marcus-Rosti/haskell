@@ -1,4 +1,7 @@
-module Ch_06 (forwardDiff, centralDiff, secondDir, lagrange, trapazoid, rienmannSums, gaussQuad, adaptiveQuad) where
+module Ch_06 (forwardDiff, centralDiff, secondDir,
+			lagrange, trapazoid, simpsons, 
+			rienmannSums, gaussQuad, adaptiveQuad,
+			integrate) where
 
 import Control.Parallel
 import Data.List
@@ -33,7 +36,7 @@ trapazoid :: (Double -> Double) -> Double -> Double -> Double
 trapazoid f a b = (b - a) / 2 * ( (f a) + (f b))
 
 simpsons :: (Double -> Double) -> Double -> Double -> Double
-simpsons f a b = (b - a) / 2 * ((f a) + 4 * (f ((a+b) / 2 )) + (f b))
+simpsons f a b = (b-a)/6 * ((f a) + 4 * (f ((a+b)/2)) + (f b))
 
 -- 2 point Gaussian Quad
 gaussQuad :: (Double -> Double) -> Double -> Double -> Double
@@ -46,27 +49,35 @@ gaussQuad f a b = (b - a) / 2 * (alpha0 * (f v0) + alpha1 * (f v1))
 		v0 = ((z0*(b-a)+a+b))/2
 		v1 = ((z1*(b-a)+a+b))/2
 
-adaptiveQuad :: (Double -> Double) -> Double -> Double -> Double -> Double
-adaptiveQuad f a b err 
+adaptiveQuad :: ((Double -> Double) -> Double -> Double -> Double)
+				 -> (Double -> Double) -> Double -> Double -> Double
+				 -> Double
+adaptiveQuad quadRule f a b err 
 	| abs (mainQuad - testQuad) < (err/10) = mainQuad
 	| otherwise = par n1 (pseq n2 (n1 + n2))
  		where
  			mid = (a+b)/2
- 			mainQuad = gaussQuad f a b
- 			testQuad = gaussQuad f a mid + gaussQuad f mid b
- 			n1 = adaptiveQuad f a mid err
- 			n2 = adaptiveQuad f mid b err
+ 			mainQuad = quadRule f a b
+ 			testQuad = quadRule f a mid + quadRule f mid b
+ 			n1 = adaptiveQuad quadRule f a mid err
+ 			n2 = adaptiveQuad quadRule f mid b err
 
--- adaptiveQuad :: (Double -> Double) -> Double -> Double -> Double -> Double
--- adaptiveQuad f a b err 
+integrate :: (Double -> Double)
+           -> Double -> Double -> Double -> Double
+integrate = adaptiveQuad gaussQuad
+
+-- adaptiveQuad :: ((Double -> Double) -> Double -> Double -> Double)
+-- 				 -> (Double -> Double) -> Double -> Double -> Double
+-- 				 -> Double
+-- adaptiveQuad quadRule f a b err
 -- 	| abs (mainQuad - testQuad) < (err/10) = mainQuad
 -- 	| otherwise = n1 + n2
 --  		where
 --  			mid = (a+b)/2
---  			mainQuad = gaussQuad f a b
---  			testQuad = gaussQuad f a mid + gaussQuad f mid b
---  			n1 = adaptiveQuad f a mid err
---  			n2 = adaptiveQuad f mid b err
+--  			mainQuad = quadRule f a b
+--  			testQuad = quadRule f a mid + quadRule f mid b
+--  			n1 = adaptiveQuad quadRule f a mid err
+--  			n2 = adaptiveQuad quadRule f mid b err
 
 
 
