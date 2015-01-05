@@ -11,14 +11,14 @@ main = do
 	let antiF x = cos(x**2)
 	-- let fp x = e**(sin x + x) * (cos x + 1)
 	let err = 10**(-5)
-	let a_0 = 1
-	let b_0 = 48
+	let a_0 = -100
+	let b_0 = 0
 	let real = antiF b_0 - antiF a_0
 	let gq = adaptiveQuad gaussQuad f a_0 b_0 err
 	let simps = adaptiveQuad simpsons f a_0 b_0 err
 	let trap = adaptiveQuad trapazoid f a_0 b_0 err
 	print $ real - gaussQuad f a_0 b_0
-	print $ real - gq <= err
-	print $ real - simps <= err
-	print $ real - trap <= err
+	print $ real - gq <= err*10
+	print $ real - simps <= err*10
+	print $ real - trap <= err*10
 	print $ antiF b_0 - antiF a_0

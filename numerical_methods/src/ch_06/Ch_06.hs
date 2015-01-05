@@ -62,13 +62,6 @@ adaptiveQuad quadRule f a b err
  			n1 = adaptiveQuad quadRule f a mid err
  			n2 = adaptiveQuad quadRule f mid b err
 
-integrate :: (Double -> Double)
-           -> Double -> Double -> Double -> Double
-integrate = adaptiveQuad gaussQuad
-
--- adaptiveQuad :: ((Double -> Double) -> Double -> Double -> Double)
--- 				 -> (Double -> Double) -> Double -> Double -> Double
--- 				 -> Double
 -- adaptiveQuad quadRule f a b err
 -- 	| abs (mainQuad - testQuad) < (err/10) = mainQuad
 -- 	| otherwise = n1 + n2
@@ -78,6 +71,10 @@ integrate = adaptiveQuad gaussQuad
 --  			testQuad = quadRule f a mid + quadRule f mid b
 --  			n1 = adaptiveQuad quadRule f a mid err
 --  			n2 = adaptiveQuad quadRule f mid b err
+
+integrate :: (Double -> Double)
+           -> Double -> Double -> Double -> Double
+integrate = adaptiveQuad gaussQuad
 
 
 
