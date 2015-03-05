@@ -1,21 +1,21 @@
-import Data.List
-import Data.String.Utils
-import Data.Maybe
+import           Data.List
+import           Data.Maybe
+import           Data.String.Utils
 
 --------------------------------------------------------------------------------------------------------
--- Data Types! 
+-- Data Types!
 -- TODO: seperate this into its own file
-data Person = 	Person 	{ 	
+data Person = 	Person 	{
 							-- | A person must have a name and it must be a string
-							name :: String, 
+							name :: String,
 							-- | The person has a Personality
-							personality :: Personality 
+							personality :: Personality
 						}
 				deriving (Show, Eq)
 
-data Personality = 	Personality { 	
+data Personality = 	Personality {
 									-- Person's desire for a high pary
-									pay::Int, 
+									pay::Int,
 									-- The expected hours the Person is willing to work
 									hours::Int,
 									-- The Person's desire for individual impact at the Company
@@ -27,7 +27,7 @@ data Personality = 	Personality {
 
 --implementations of Personality
 entrepreneur :: Personality
-entrepreneur = 	Personality {pay=4,	hours= -2,	impact=10,	opportunity=8} 
+entrepreneur = 	Personality {pay=4,	hours= -2,	impact=10,	opportunity=8}
 moneygrubber :: Personality
 moneygrubber = 	Personality {pay=10,hours= -1, 	impact=4,	opportunity=2}
 academic :: 	Personality
@@ -36,9 +36,9 @@ slacker :: 		Personality
 slacker = 		Personality {pay=6,	hours= -10,	impact=2,	opportunity=2}
 
 
-data Company = 	Company {	
+data Company = 	Company {
 							-- How much the employee will be paid
-							payC::Int, 
+							payC::Int,
 							-- The expected hours the employee will work
 							hoursC::Int,
 							-- The employee's individual impact at the Company
@@ -75,7 +75,7 @@ data Relationship 	= MortalEnemies
 -- make persons and offers
 -- TODO: Relationships
 makePersonality :: String -> Personality
-makePersonality string 
+makePersonality string
 			| string == "Academic" = academic
 			| string == "Entrepreneur" = entrepreneur
 			| string == "Money Grubber" = moneygrubber
@@ -83,7 +83,7 @@ makePersonality string
 			| otherwise = error ("Invalid Personality Type: " ++ string)
 
 makeCompany :: String -> Company
-makeCompany string 
+makeCompany string
 			| string == "Big Software Firm" = bigsoftwarefirm
 			| string == "Investment Bank" = investmentbank
 			| string == "Grad School" = gradschool
@@ -93,17 +93,17 @@ makeCompany string
 
 -- Turning arrays into data types
 makePerson :: [String] -> Person
-makePerson (name:personality:[]) = Person name (makePersonality personality)
+makePerson [name,personality] = Person name (makePersonality personality)
 
 getPerson :: String -> [Person] -> Person
 getPerson str people = fromJust $ find (\(Person name personality) -> name == str) people
 
 makeOffer :: [String] -> [Person] -> Offer
-makeOffer (name:firm:company:place:[]) people = Offer (getPerson name people) firm (makeCompany company) place 
+makeOffer [name, firm, company, place] people = Offer (getPerson name people) firm (makeCompany company) place
 
 --------------------------------------------------------------------------------------------------------
 -- I/O bullshit as always.
--- I really hate this stuff. It's uninspiring 
+-- I really hate this stuff. It's uninspiring
 removeCarriageReturn :: String -> String
 removeCarriageReturn str = strip $ replace "\r" " " str
 
@@ -111,12 +111,12 @@ splitOnL :: String -> [String]
 splitOnL str = map strip $ split "|" str
 
 purgeInput :: String -> [[String]]
-purgeInput str = map splitOnL $ map removeCarriageReturn $ lines str
+purgeInput str = map (splitOnL . removeCarriageReturn) (lines str)
 
 dropPrevious :: [[String]] -> [[String]]
 dropPrevious x = dropWhile (==[]) $ dropWhile (/=[]) x
 
--- Eh there's probably a way to do this better it's fast and 
+-- Eh there's probably a way to do this better it's fast and
 makePeopleArray :: [[String]] -> [[String]]
 makePeopleArray str = drop 1 $ takeWhile (/=[]) $ dropWhile (==[]) str
 makeOfferArray :: [[String]] -> [[String]]
@@ -126,18 +126,18 @@ makeRelArray str = drop 1 $ takeWhile (/=[]) $ dropPrevious $ dropPrevious $ dro
 --------------------------------------------------------------------------------------------------------
 -- Basic Scoring
 scoreCompany :: Personality -> Company -> Int
-scoreCompany (Personality ppay phours pimpact popportunity) (Company cpay chours cimpact copportunity) 
+scoreCompany (Personality ppay phours pimpact popportunity) (Company cpay chours cimpact copportunity)
 		= ppay*cpay + phours*chours + pimpact*cimpact + popportunity*copportunity
 
 scoreOfferBase:: Person -> String -> Company -> String -> (Person, String, Int, String)
-scoreOfferBase (Person name personality) b company d = ((Person name personality) , b, (scoreCompany personality company) ,d)
+scoreOfferBase (Person name personality) b company d = (Person name personality, b, scoreCompany personality company, d)
 
 scoreOffer :: Offer -> (Person, String, Int, String)
 scoreOffer (Offer a b c d) = scoreOfferBase a b c d
 
 
 --------------------------------------------------------------------------------------------------------
-{- 
+{-
 My inclination is to do a breadth first search to essentially assign every possible job
 I know this isn't efficient but I'm doing my best
 -}
@@ -158,7 +158,7 @@ sortOffers (_,_,firstVal,_) (_,_,secondVal,_) = compare secondVal firstVal
 
 --------------------------------------------------------------------------------------------------------
 main :: IO ()
-main = do 
+main = do
 	inputFile <- getContents
 	let purgedAndSeperated = purgeInput inputFile
 
@@ -167,12 +167,8 @@ main = do
 	--let relStrArray = makeRelArray purgedAndSeperated
 
 	let peopleArray = map makePerson peopleStrArray
-	let offerArray = map (\x -> makeOffer x peopleArray) offerStrArray
+	let offerArray = map (`makeOffer` peopleArray) offerStrArray
 
 	let scoredOffers = map scoreOffer offerArray
 	print $ groupBy (\(person,_,_,_) (otherPerson,_,_,_) -> person==otherPerson) scoredOffers
 	print $ sortBy sortOffers scoredOffers
-
-
-
-
