@@ -14,13 +14,13 @@ data Person = 	Person 	{
 				deriving (Show, Eq)
 
 data Personality = 	Personality {
-									-- Person's desire for a high pary
+									-- | Person's desire for a high pary
 									pay::Int,
-									-- The expected hours the Person is willing to work
+									-- | The expected hours the Person is willing to work
 									hours::Int,
-									-- The Person's desire for individual impact at the Company
+									-- | The Person's desire for individual impact at the Company
 									impact::Int,
-									-- The Person's oppourtunity to learn more at the Compay
+									-- | The Person's oppourtunity to learn more at the Compay
 									opportunity::Int
 								}
 					deriving (Show, Eq)
@@ -146,8 +146,8 @@ I know this isn't efficient but I'm doing my best
 sortOffers :: (Person, String, Int, String) -> (Person, String, Int, String) -> Ordering
 sortOffers (_,_,firstVal,_) (_,_,secondVal,_) = compare secondVal firstVal
 
--- assignJob :: Person -> [(Person, String, Int, String)] -> (Person, String)
--- assignJob personToAssign [(person,comp,score,city)] = (personToAssign,comp,score,city)
+--assignJob :: Person -> [(Person, String, Int, String)] -> (Person, String)
+--assignJob personToAssign [(person,comp,score,city)] = (personToAssign,comp,score,city)
 
 
 
@@ -170,5 +170,6 @@ main = do
 	let offerArray = map (`makeOffer` peopleArray) offerStrArray
 
 	let scoredOffers = map scoreOffer offerArray
+
 	print $ groupBy (\(person,_,_,_) (otherPerson,_,_,_) -> person==otherPerson) scoredOffers
 	print $ sortBy sortOffers scoredOffers
