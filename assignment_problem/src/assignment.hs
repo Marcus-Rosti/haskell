@@ -75,21 +75,21 @@ data Relationship 	= MortalEnemies
 -- make persons and offers
 -- TODO: Relationships
 makePersonality :: String -> Personality
-makePersonality string
-			| string == "Academic" = academic
-			| string == "Entrepreneur" = entrepreneur
-			| string == "Money Grubber" = moneygrubber
-			| string == "Slacker" = slacker
-			| otherwise = error ("Invalid Personality Type: " ++ string)
+makePersonality str
+			| str == "Academic" = academic
+			| str == "Entrepreneur" = entrepreneur
+			| str == "Money Grubber" = moneygrubber
+			| str == "Slacker" = slacker
+			| otherwise = error ("Invalid Personality Type: " ++ str)
 
 makeCompany :: String -> Company
-makeCompany string
-			| string == "Big Software Firm" = bigsoftwarefirm
-			| string == "Investment Bank" = investmentbank
-			| string == "Grad School" = gradschool
-			| string == "Hedge Fund" = hedgefund
-			| string == "Startup" = startup
-			| otherwise = error ("Invalid Company Type: " ++ string)
+makeCompany str
+			| str == "Big Software Firm" = bigsoftwarefirm
+			| str == "Investment Bank" = investmentbank
+			| str == "Grad School" = gradschool
+			| str == "Hedge Fund" = hedgefund
+			| str == "Startup" = startup
+			| otherwise = error ("Invalid Company Type: " ++ str)
 
 -- Turning arrays into data types
 makePerson :: [String] -> Person
